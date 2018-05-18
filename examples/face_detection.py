@@ -2,6 +2,25 @@
 
 import requests
 import argparse
+import cv2
+
+
+def draw_faces(image, json):
+    image = cv2.imread(image)
+    for i, face in enumerate(json['faces']):
+        startX = face['up_left_point']['x']
+        startY = face['up_left_point']['y']
+        endX = face['down_right_point']['x']
+        endY = face['down_right_point']['y']
+        # draw the bounding box of the face along with the associated
+        # probability
+        cv2.rectangle(image, (startX, startY), (endX, endY),
+                      (0, 0, 255), 3)
+
+    cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
+    cv2.imshow("Image", image)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
@@ -33,10 +52,12 @@ if __name__ == '__main__':
     json = response.json()
     print('Server response:', json)
     print('Type returned:', type(json))
-    print('{} face detected'.format(len(json['faces'])))
-    for i, face in enumerate(json['faces']):
-        print('Face {}:'.format(i))
-        print('    x_start:', face['up_left_point']['x'])
-        print('    y_start:', face['up_left_point']['y'])
-        print('    x_end:', face['down_right_point']['x'])
-        print('    x_end:', face['down_right_point']['y'])
+    if json['error'] == '':
+        print('{} face detected'.format(len(json['faces'])))
+        draw_faces(args['image'], json)
+        for i, face in enumerate(json['faces']):
+            print('Face {}:'.format(i))
+            print('    x_start:', face['up_left_point']['x'])
+            print('    y_start:', face['up_left_point']['y'])
+            print('    x_end:', face['down_right_point']['x'])
+            print('    x_end:', face['down_right_point']['y'])
