@@ -21,12 +21,10 @@ class Noos:
         url = urljoin(self.server, service)
         files = {
             'filename': (file_path, open(file_path, 'rb'))
-        } if file_path else None
+        } if file_path else parameters
 
-        print('parameters:', parameters)
         return requests.post(
             url,
-            data=parameters,
             headers=self.headers,
             files=files)
 
@@ -79,34 +77,33 @@ class Noos:
     ##################################################
     # MOBILE ROBOTICS                                #
     ##################################################
-    def upload_slam_config_file(self, json):
-        response = self.post('upload_slam_config_file',
-            parameters=json)
-        print(response.text)
+    def upload_slam_config_file(self, json_data):
         return self.post('upload_slam_config_file',
-            parameters=json).json()
+            parameters={'json': dumps(json_data)}).json()
 
-    def slam(self, json):
-        return self.post('slam', parameters=json).json()
+    def slam(self, json_data):
+        return self.post('slam',
+            parameters={'json': dumps(json_data)}).json()
 
     def get_map(self, map_name):
-        response = self.post('get_map',
-            parameters={'json': '{"map_name": "map"}'})
-        print('status code:', response.status_code)
-        print('text:', response.text)
-        print('raw:', response.raw)
-        print('headers:', response.headers)
-        return response
-        # return self.get('get_map', parameters={'map_name': map_name})
+        return self.post('get_map',
+            parameters={'json': '{"map_name": "map"}'}).json()
 
     def delete_map(self, map_name):
-        return self.get('get_map', parameters={'name': map_name})
+        return self.post('delete_map',
+            parameters={'json': dumps({'name': map_name})}).json()
 
-    def path_planning(self, json):
-        return self.post('path_planning', parameters=json)
+    def path_planning(self, json_data):
+        return self.post('path_planning',
+            parameters={'json': dumps(json_data)}).json()
 
     ##################################################
     # DIALOGUE_SYSTEMS                               #
     ##################################################
-    def chat(self, sentence, model_name=None):
-        pass
+    def chat(self, sentence, model_filename=None):
+        json_data = {
+            'state': sentence,
+            'filename': model_filename if model_filename else ''
+        }
+        return self.post('chat',
+            parameters={'json': dumps(json_data)}).json()

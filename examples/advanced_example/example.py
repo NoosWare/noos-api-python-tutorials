@@ -40,6 +40,7 @@ if __name__ == '__main__':
     args = get_args()
     logins = open('.noos_credentials').read().splitlines()
     noos = Noos('https://demo.noos.cloud:9001/', logins[0], logins[1])
+    # noos = Noos('http://localhost:9001/', logins[0], logins[1])
 
     ##################################################
     # UTILITY                                        #
@@ -103,23 +104,23 @@ if __name__ == '__main__':
     if args.all or args.service == 'upload_slam_config_file':
         path = getcwd() + '/../data/upload_icp_file.json'
         json_data = load(open(path))
-        # print(dumps(noos.upload_slam_config_file(json_data), indent=4))
-        noos.upload_slam_config_file(json_data)
+        print(dumps(noos.upload_slam_config_file(json_data), indent=4))
 
     if args.all or args.service == 'slam':
         path = getcwd() + '/../data/laser.json'
-        print(dumps(noos.slam(path), indent=4))
+        json_data = load(open(path))
+        print(dumps(noos.slam(json_data), indent=4))
 
     if args.all or args.service == 'get_map':
-        noos.get_map('map')
-        # print(dumps(noos.get_map(), indent=4))
+        print(dumps(noos.get_map('map'), indent=4))
 
     if args.all or args.service == 'delete_map':
-        print(dumps(noos.delete_map(), indent=4))
+        print(dumps(noos.delete_map('map'), indent=4))
 
     if args.all or args.service == 'path_planning':
         path = getcwd() + '/../data/path.json';
-        print(dumps(noos.path_planning(path), indent=4))
+        json_data = load(open(path))
+        print(dumps(noos.path_planning(json_data), indent=4))
 
     ##################################################
     # DIALOGUE_SYSTEMS                               #
