@@ -1,0 +1,15 @@
+{
+	"start": {
+		"y": 0.2,
+		"x": 0.1,
+		"theta": 0.3
+	},
+	"goal": {
+		"y": 0.2,
+		"x": 0.1,
+		"theta": 0.3
+	},
+	"resolution": 0.05,
+	"radius": 0.2,
+	"map_name": "map"
+}
